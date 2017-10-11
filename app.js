@@ -1,34 +1,50 @@
 //jshint esnext:true
 function onReady() {
+  const toDos = [];
   const addToDoForm = document.getElementById('addToDoForm');
-  const newToDoList = document.getElementById('newToDoText');
-  const toDoList = document.getElementById('toDoList');
+  const removeTask = document.createElement('input')
+
+  function createNewToDo() {
+    const newToDoText = document.getElementById('newToDoText');
+    if (!newToDoText) { return }
+    toDos.push ({
+      title: newToDoText.value,
+      complete: false
+    });
+
+    newToDoText.value = '';
+    renderTheUI(toDos);
+  }
+
+
+  function renderTheUI(toDos) {
+    const todoList = document.getElementById('toDoList')
+    toDoList.textContent = '';
+    toDos.forEach(function(toDo) {
+      const newLi = document.createElement('li');
+      const checkbox = document.createElement('input');
+      const removeTask = document.createElement('input')
+      removeTask.type = "button";
+      removeTask.value = "Delete";
+      checkbox.type = "checkbox";
+      newLi.textContent = toDo.title;
+      toDoList.appendChild(newLi);
+      newLi.appendChild(checkbox);
+      newLi.appendChild(removeTask);
+    });
+  }
+
 
 
   addToDoForm.addEventListener('submit', event => {
     event.preventDefault();
-    let title = newToDoText.value;
-    let newLi = document.createElement('li');
-    let checkbox = document.createElement('input');
-    let removeTask = document.createElement('input');
-    removeTask.type = "button";
-    removeTask.value = "Delete"
-    checkbox.type = "checkbox";
-    newLi.textContent = title;
-    newLi.appendChild(checkbox);
-    newLi.appendChild(removeTask);
-    toDoList.appendChild(newLi);
-    newToDoList.value = '';
-
-  removeTask.addEventListener('click', function(e) {
-    newLi.parentNode.removeChild(newLi);
-    newLi.appendChild(removeTask);
+    createNewToDo();
   });
 
 
-  });
-
+  renderTheUI(toDos);
 }
+
 
 window.onload = function() {
   onReady();
